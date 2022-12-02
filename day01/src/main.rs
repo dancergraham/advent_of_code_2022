@@ -16,6 +16,8 @@ fn main() {
         Ok(_) => {
             let answer_part_1 = part_1(&s);
             println!("The answer to Part 1 is {}", answer_part_1);
+            let answer_part_2 = part_2(&s);
+            println!("The answer to Part 2 is {}", answer_part_2);
         }
     }
 }
@@ -36,4 +38,30 @@ fn part_1(input: &str) -> i32 {
         }
     }
     return answer;
+}
+
+fn part_2(input: &str) -> i32 {
+    let mut largest = 0;
+    let mut second = 0;
+    let mut third = 0;
+    let mut elf = 0;
+    let lines = input.lines();
+    for line in lines {
+        if line == "" {
+            if elf > third {
+                third = elf;
+                if third > second {
+                    (second, third) = (third, second);
+                    if second > largest {
+                        (second, largest) = (largest, second);
+                    }
+                }
+            }
+            elf = 0;
+        } else {
+            let calories = line.parse::<i32>().unwrap();
+            elf = elf + calories;
+        }
+    }
+    return largest + second + third;
 }
