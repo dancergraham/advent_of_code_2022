@@ -1,7 +1,7 @@
 fn main() {
-    use std::path::Path;
     use std::fs::File;
     use std::io::Read;
+    use std::path::Path;
     let path = Path::new("input.txt");
     let display = path.display();
 

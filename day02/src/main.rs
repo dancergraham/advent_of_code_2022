@@ -1,7 +1,7 @@
 fn main() {
-    use std::path::Path;
     use std::fs::File;
     use std::io::Read;
+    use std::path::Path;
     let test_input = "A Y
 B X
 C Z";
@@ -34,7 +34,6 @@ struct Turn {
     score: i32,
 }
 
-
 fn my_turn(code: char) -> Turn {
     let mut result = Turn {
         choice: "SCISSORS".to_string(),
@@ -63,7 +62,8 @@ fn my_turn_2(code: char, opponent: Turn) -> Turn {
         choice = opponent.clone();
     }
 
-    if code == 'X' { // I need to lose
+    if code == 'X' {
+        // I need to lose
         if opponent.choice == "SCISSORS" {
             choice = Turn {
                 choice: "PAPER".to_string(),
@@ -73,10 +73,10 @@ fn my_turn_2(code: char, opponent: Turn) -> Turn {
             choice = Turn {
                 choice: "ROCK".to_string(),
                 score: 1,
-
             };
         }
-    } else if code == 'Z' { // I need to win
+    } else if code == 'Z' {
+        // I need to win
         if opponent.choice == "ROCK" {
             choice = Turn {
                 choice: "PAPER".to_string(),
@@ -86,7 +86,6 @@ fn my_turn_2(code: char, opponent: Turn) -> Turn {
             choice = Turn {
                 choice: "ROCK".to_string(),
                 score: 1,
-
             };
         }
     }
@@ -99,14 +98,26 @@ fn outcome(my_choice: String, opponent_choice: String) -> i32 {
     if my_choice == opponent_choice {
         score = 3;
     } else if my_choice == "ROCK" {
-        if opponent_choice == "PAPER" { score = 0 }
-        if opponent_choice == "SCISSORS" { score = 6 }
+        if opponent_choice == "PAPER" {
+            score = 0
+        }
+        if opponent_choice == "SCISSORS" {
+            score = 6
+        }
     } else if my_choice == "PAPER" {
-        if opponent_choice == "ROCK" { score = 6 }
-        if opponent_choice == "SCISSORS" { score = 0 }
+        if opponent_choice == "ROCK" {
+            score = 6
+        }
+        if opponent_choice == "SCISSORS" {
+            score = 0
+        }
     } else if my_choice == "SCISSORS" {
-        if opponent_choice == "ROCK" { score = 0 }
-        if opponent_choice == "PAPER" { score = 6 }
+        if opponent_choice == "ROCK" {
+            score = 0
+        }
+        if opponent_choice == "PAPER" {
+            score = 6
+        }
     }
     return score;
 }
