@@ -27,8 +27,8 @@ CrZsJsPPZsGzwwsLwLmpwMDw
         Ok(_) => {
             let answer_part_1 = part_1(&s);
             println!("The answer to Part 1 is {}", answer_part_1);
-            // let answer_part_2 = part_2(&s);
-            // println!("The answer to Part 2 is {}", answer_part_2);
+            let answer_part_2 = part_2(&s);
+            println!("The answer to Part 2 is {}", answer_part_2);
         }
     }
 }
@@ -55,6 +55,26 @@ fn part_1(input: &str) -> i32 {
             if second.contains(item_1) {
                 priority = get_priority(item_1);
                 break;
+            }
+        }
+        answer = answer + priority;
+    }
+    return answer;
+}
+
+fn part_2(input: &str) -> i32 {
+    let mut answer = 0;
+    let mut priority = 0;
+    let mut lines = input.lines();
+    while let (Some(line_1), Some(line_2), Some(line_3)) =
+        (lines.next(), lines.next(), lines.next())
+    {
+        for item_1 in line_1.chars() {
+            if line_2.contains(item_1) {
+                if line_3.contains(item_1) {
+                    priority = get_priority(item_1);
+                    break;
+                }
             }
         }
         answer = answer + priority;
