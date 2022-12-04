@@ -1,20 +1,27 @@
-fn main() {
-    use std::fs::File;
-    use std::io::Read;
-    use std::path::Path;
-    let test_input = "2-4,6-8
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_part_1() {
+        let test_input = "2-4,6-8
 2-3,4-5
 5-7,7-9
 2-8,3-7
 6-6,4-6
 2-6,4-8";
-    let answer = part_1(test_input);
-    println!("The test answer to Part 1 is {}", answer);
-    assert_eq!(answer, 2);
+        use super::*;
+        let answer = part_1(test_input);
+        println!("The test answer to Part 1 is {}", answer);
+        assert_eq!(answer, 2);
+        let answer = part_2(test_input);
+        println!("The test answer to Part 2 is {}", answer);
+        assert_eq!(answer, 4);
+    }
+}
 
-    let answer = part_2(test_input);
-    println!("The test answer to Part 2 is {}", answer);
-    assert_eq!(answer, 4);
+fn main() {
+    use std::fs::File;
+    use std::io::Read;
+    use std::path::Path;
 
     let path = Path::new("input.txt");
     let display = path.display();
