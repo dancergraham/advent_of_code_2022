@@ -70,11 +70,9 @@ fn part_2(input: &str) -> i32 {
         (lines.next(), lines.next(), lines.next())
     {
         for item_1 in line_1.chars() {
-            if line_2.contains(item_1) {
-                if line_3.contains(item_1) {
-                    priority = get_priority(item_1);
-                    break;
-                }
+            if line_2.contains(item_1) & line_3.contains(item_1) {
+                priority = get_priority(item_1);
+                break;
             }
         }
         answer = answer + priority;
