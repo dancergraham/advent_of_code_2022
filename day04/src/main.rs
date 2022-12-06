@@ -35,10 +35,8 @@ fn main() {
     match file.read_to_string(&mut s) {
         Err(why) => panic!("couldn't read {}: {}", display, why),
         Ok(_) => {
-            let answer_part_1 = part_1(&s);
-            println!("The answer to Part 1 is {}", answer_part_1);
-            let answer_part_2 = part_2(&s);
-            println!("The answer to Part 2 is {}", answer_part_2); // 1000 is too high
+            println!("The answer to Part 1 is {}", part_1(&s));
+            println!("The answer to Part 2 is {}", part_2(&s));
         }
     }
 }
