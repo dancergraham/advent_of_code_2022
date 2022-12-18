@@ -1,9 +1,10 @@
+[build-system]
+requires = ["setuptools"]
 [project]
 dependencies = [
   'parse',
   'pytest',
 ]
-# pyproject.toml
 [tool.pytest.ini_options]
 testpaths = [
     "*/day*.py",
