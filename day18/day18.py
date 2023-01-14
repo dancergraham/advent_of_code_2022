@@ -18,7 +18,7 @@ TEST_INPUT = """2,2,2
 
 def main():
     print(f"{part_1(Path('input.txt').read_text())}")
-    print(f"{part_2(Path('input.txt').read_text())}") # 1820 too low
+    print(f"{part_2(Path('input.txt').read_text())}")  # 1826 too low
 
 
 def test_part_1():
