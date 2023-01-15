@@ -45,11 +45,9 @@ fn main() {
 }
 
 fn part_1(input: &str) -> String {
-    let sections: Vec<&str> = input.split("\n\n").collect();
-    let mut stackstrings = sections[0].lines().rev();
+    let mut sections = input.split("\n\n");
+    let stackstrings = sections.next().expect("");
     let n_stacks = stackstrings
-        .next()
-        .expect("Final line contains numbers")
         .split("   ")
         .last()
         .expect("Final number is the number of stacks")
@@ -57,7 +55,7 @@ fn part_1(input: &str) -> String {
         .parse::<usize>()
         .unwrap();
     let mut stacks: Vec<Vec<char>> = vec![vec![]; n_stacks];
-    for line in stackstrings {
+    for line in stackstrings.split("\n") {
         let mut chars = line.chars();
         chars.next();
         let char = chars.next().expect("at least one stack");
@@ -71,7 +69,7 @@ fn part_1(input: &str) -> String {
             }
         }
     }
-    let instructions = sections[1];
+    let instructions = sections.next().expect("");
     for line in instructions.lines() {
         let items: Vec<&str> = line.split(' ').collect();
         let n_items = items[1].parse::<usize>().unwrap();
@@ -91,11 +89,9 @@ fn part_1(input: &str) -> String {
 }
 
 fn part_2(input: &str) -> String {
-    let sections: Vec<&str> = input.split("\n\n").collect();
-    let mut stackstrings = sections[0].lines().rev();
+    let mut sections = input.split("\n\n");
+    let stackstrings = sections.next().expect("");
     let n_stacks = stackstrings
-        .next()
-        .expect("Final line contains numbers")
         .split("   ")
         .last()
         .expect("Final number is the number of stacks")
@@ -103,7 +99,7 @@ fn part_2(input: &str) -> String {
         .parse::<usize>()
         .unwrap();
     let mut stacks: Vec<Vec<char>> = vec![vec![]; n_stacks];
-    for line in stackstrings {
+    for line in stackstrings.lines() {
         let mut chars = line.chars();
         chars.next();
         let char = chars.next().expect("at least one stack");
@@ -117,7 +113,7 @@ fn part_2(input: &str) -> String {
             }
         }
     }
-    let instructions = sections[1];
+    let instructions = sections.next().expect("");
     for line in instructions.lines() {
         let items: Vec<&str> = line.split(' ').collect();
         let n_items = items[1].parse::<usize>().unwrap();
