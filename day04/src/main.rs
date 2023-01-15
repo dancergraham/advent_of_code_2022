@@ -48,7 +48,7 @@ struct Range {
 }
 
 fn elf_to_range(elf: &str) -> Range {
-    let values: [&str; 2] = elf.split('-').collect();
+    let values: Vec<&str> = elf.split('-').collect();
     return Range {
         start: values[0].parse::<u32>().unwrap(),
         end: values[1].parse::<u32>().unwrap(),
