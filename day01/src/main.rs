@@ -7,17 +7,17 @@ fn main() {
 
     // Open the path in read-only mode, returns `io::Result<File>`
     let mut file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}", display, why),
+        Err(why) => panic!("couldn't open {display}: {why}"),
         Ok(file) => file,
     };
     let mut s = String::new();
     match file.read_to_string(&mut s) {
-        Err(why) => panic!("couldn't read {}: {}", display, why),
+        Err(why) => panic!("couldn't read {display}: {why}"),
         Ok(_) => {
             let answer_part_1 = part_1(&s);
-            println!("The answer to Part 1 is {}", answer_part_1);
+            println!("The answer to Part 1 is {answer_part_1}");
             let answer_part_2 = part_2(&s);
-            println!("The answer to Part 2 is {}", answer_part_2);
+            println!("The answer to Part 2 is {answer_part_2}");
         }
     }
 }
