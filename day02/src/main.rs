@@ -13,7 +13,7 @@ C Z";
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
-    let mut file = match File::open(&path) {
+    let mut file = match File::open(path) {
         Err(why) => panic!("couldn't open {}: {}", display, why),
         Ok(file) => file,
     };
@@ -22,9 +22,9 @@ C Z";
         Err(why) => panic!("couldn't read {}: {}", display, why),
         Ok(_) => {
             let answer_part_1 = part_1(&s);
-            println!("The answer to Part 1 is {}", answer_part_1);
+            println!("The answer to Part 1 is {answer_part_1}");
             let answer_part_2 = part_2(&s);
-            println!("The answer to Part 2 is {}", answer_part_2);
+            println!("The answer to Part 2 is {answer_part_2}");
         }
     }
 }
@@ -50,7 +50,7 @@ fn my_turn(code: char) -> Turn {
             score: 2,
         };
     }
-    return result;
+    result
 }
 
 fn my_turn_2(code: char, opponent: Turn) -> Turn {
@@ -90,7 +90,7 @@ fn my_turn_2(code: char, opponent: Turn) -> Turn {
         }
     }
 
-    return choice;
+    choice
 }
 
 fn outcome(my_choice: String, opponent_choice: String) -> i32 {
@@ -119,7 +119,7 @@ fn outcome(my_choice: String, opponent_choice: String) -> i32 {
             score = 6
         }
     }
-    return score;
+    score
 }
 
 fn opponent_turn(code: char) -> Turn {
@@ -138,29 +138,29 @@ fn opponent_turn(code: char) -> Turn {
             score: 2,
         };
     }
-    return result;
+    result
 }
 
 fn part_1(input: &str) -> i32 {
     let mut answer = 0;
     let lines = input.lines();
     for line in lines {
-        let opponent = opponent_turn(line.chars().nth(0).unwrap());
+        let opponent = opponent_turn(line.chars().next().unwrap());
         let me = my_turn(line.chars().nth(2).unwrap());
         answer = answer + me.score + outcome(me.choice, opponent.choice)
     }
-    return answer;
+    answer
 }
 
 fn part_2(input: &str) -> i32 {
     let mut answer = 0;
     let lines = input.lines();
     for line in lines {
-        let opponent = opponent_turn(line.chars().nth(0).unwrap());
+        let opponent = opponent_turn(line.chars().next().unwrap());
         let required_result = line.chars().nth(2).unwrap();
 
         let me = my_turn_2(required_result, opponent.clone());
         answer = answer + me.score + outcome(me.choice, opponent.choice)
     }
-    return answer;
+    answer
 }
