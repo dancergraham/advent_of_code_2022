@@ -10,14 +10,14 @@ ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw
 ";
     let answer = part_1(test_input);
-    println!("The test answer to Part 1 is {}", answer);
+    println!("The test answer to Part 1 is {answer}");
     assert_eq!(answer, 157);
 
     let path = Path::new("input.txt");
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
-    let mut file = match File::open(&path) {
+    let mut file = match File::open(path) {
         Err(why) => panic!("couldn't open {}: {}", display, why),
         Ok(file) => file,
     };
@@ -26,21 +26,19 @@ CrZsJsPPZsGzwwsLwLmpwMDw
         Err(why) => panic!("couldn't read {}: {}", display, why),
         Ok(_) => {
             let answer_part_1 = part_1(&s);
-            println!("The answer to Part 1 is {}", answer_part_1);
+            println!("The answer to Part 1 is {answer_part_1}");
             let answer_part_2 = part_2(&s);
-            println!("The answer to Part 2 is {}", answer_part_2);
+            println!("The answer to Part 2 is {answer_part_2}");
         }
     }
 }
 
 fn get_priority(item: char) -> i32 {
-    let priority;
     if item.is_ascii_uppercase() {
-        priority = item as i32 - 38
+        item as i32 - 38
     } else {
-        priority = item as i32 - 96
+        item as i32 - 96
     }
-    return priority;
 }
 
 fn part_1(input: &str) -> i32 {
@@ -57,9 +55,9 @@ fn part_1(input: &str) -> i32 {
                 break;
             }
         }
-        answer = answer + priority;
+        answer += priority;
     }
-    return answer;
+    answer
 }
 
 fn part_2(input: &str) -> i32 {
@@ -75,7 +73,7 @@ fn part_2(input: &str) -> i32 {
                 break;
             }
         }
-        answer = answer + priority;
+        answer += priority;
     }
-    return answer;
+    answer
 }
