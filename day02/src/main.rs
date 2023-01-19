@@ -1,3 +1,5 @@
+use crate::Item::{Paper, Rock, Scissors};
+
 fn main() {
     use std::fs::File;
     use std::io::Read;
@@ -6,7 +8,7 @@ fn main() {
 B X
 C Z";
     let answer = part_1(test_input);
-    println!("The test answer to Part 1 is {}", answer);
+    println!("The test answer to Part 1 is {answer}");
     assert_eq!(answer, 15);
 
     let path = Path::new("input.txt");
@@ -30,23 +32,29 @@ C Z";
 }
 #[derive(Clone, Debug)]
 struct Turn {
-    choice: String,
+    choice: Item,
     score: i32,
+}
+#[derive(PartialEq, Clone, Debug)]
+enum Item {
+    Rock,
+    Paper,
+    Scissors,
 }
 
 fn my_turn(code: char) -> Turn {
     let mut result = Turn {
-        choice: "SCISSORS".to_string(),
+        choice: Scissors,
         score: 3,
     };
     if code == 'X' {
         result = Turn {
-            choice: "ROCK".to_string(),
+            choice: Item::Rock,
             score: 1,
         };
     } else if code == 'Y' {
         result = Turn {
-            choice: "PAPER".to_string(),
+            choice: Item::Paper,
             score: 2,
         };
     }
@@ -55,7 +63,7 @@ fn my_turn(code: char) -> Turn {
 
 fn my_turn_2(code: char, opponent: Turn) -> Turn {
     let mut choice = Turn {
-        choice: "SCISSORS".to_string(),
+        choice: Scissors,
         score: 3,
     };
     if code == 'Y' {
@@ -64,58 +72,57 @@ fn my_turn_2(code: char, opponent: Turn) -> Turn {
 
     if code == 'X' {
         // I need to lose
-        if opponent.choice == "SCISSORS" {
+        if opponent.choice == Scissors {
             choice = Turn {
-                choice: "PAPER".to_string(),
+                choice: Paper,
                 score: 2,
             };
-        } else if opponent.choice == "PAPER" {
+        } else if opponent.choice == Paper {
             choice = Turn {
-                choice: "ROCK".to_string(),
+                choice: Item::Rock,
                 score: 1,
             };
         }
     } else if code == 'Z' {
         // I need to win
-        if opponent.choice == "ROCK" {
+        if opponent.choice == Rock {
             choice = Turn {
-                choice: "PAPER".to_string(),
+                choice: Paper,
                 score: 2,
             };
-        } else if opponent.choice == "SCISSORS" {
+        } else if opponent.choice == Scissors {
             choice = Turn {
-                choice: "ROCK".to_string(),
+                choice: Rock,
                 score: 1,
             };
         }
     }
-
     choice
 }
 
-fn outcome(my_choice: String, opponent_choice: String) -> i32 {
+fn outcome(my_choice: Item, opponent_choice: Item) -> i32 {
     let mut score = 0;
     if my_choice == opponent_choice {
         score = 3;
-    } else if my_choice == "ROCK" {
-        if opponent_choice == "PAPER" {
+    } else if my_choice == Rock {
+        if opponent_choice == Paper {
             score = 0
         }
-        if opponent_choice == "SCISSORS" {
+        if opponent_choice == Scissors {
             score = 6
         }
-    } else if my_choice == "PAPER" {
-        if opponent_choice == "ROCK" {
+    } else if my_choice == Paper {
+        if opponent_choice == Rock {
             score = 6
         }
-        if opponent_choice == "SCISSORS" {
+        if opponent_choice == Scissors {
             score = 0
         }
-    } else if my_choice == "SCISSORS" {
-        if opponent_choice == "ROCK" {
+    } else if my_choice == Scissors {
+        if opponent_choice == Rock {
             score = 0
         }
-        if opponent_choice == "PAPER" {
+        if opponent_choice == Paper {
             score = 6
         }
     }
@@ -124,17 +131,17 @@ fn outcome(my_choice: String, opponent_choice: String) -> i32 {
 
 fn opponent_turn(code: char) -> Turn {
     let mut result = Turn {
-        choice: "SCISSORS".to_string(),
+        choice: Scissors,
         score: 3,
     };
     if code == 'A' {
         result = Turn {
-            choice: "ROCK".to_string(),
+            choice: Rock,
             score: 1,
         };
     } else if code == 'B' {
         result = Turn {
-            choice: "PAPER".to_string(),
+            choice: Paper,
             score: 2,
         };
     }
@@ -158,7 +165,6 @@ fn part_2(input: &str) -> i32 {
     for line in lines {
         let opponent = opponent_turn(line.chars().next().unwrap());
         let required_result = line.chars().nth(2).unwrap();
-
         let me = my_turn_2(required_result, opponent.clone());
         answer = answer + me.score + outcome(me.choice, opponent.choice)
     }
