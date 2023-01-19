@@ -57,12 +57,13 @@ impl Range {
     fn overlaps(self, other: Range) -> bool {
         !((other.end < self.start) | (other.start > self.end))
     }
-}
-fn elf_to_range(elf: &str) -> Range {
-    let values: Vec<&str> = elf.split('-').collect();
-    Range {
-        start: values[0].parse::<u32>().unwrap(),
-        end: values[1].parse::<u32>().unwrap(),
+
+    fn from_elf(elf: &str) -> Self {
+        let values: Vec<&str> = elf.split('-').collect();
+        Self {
+            start: values[0].parse::<u32>().unwrap(),
+            end: values[1].parse::<u32>().unwrap(),
+        }
     }
 }
 
@@ -71,8 +72,8 @@ fn part_1(input: &str) -> i32 {
     let lines = input.lines();
     for line in lines {
         let elves: Vec<&str> = line.split(',').collect();
-        let elf_1 = elf_to_range(elves[0]);
-        let elf_2 = elf_to_range(elves[1]);
+        let elf_1 = Range::from_elf(elves[0]);
+        let elf_2 = Range::from_elf(elves[1]);
         if elf_1.contains(elf_2) | elf_2.contains(elf_1) {
             answer += 1
         }
@@ -85,8 +86,8 @@ fn part_2(input: &str) -> i32 {
     let lines = input.lines();
     for line in lines {
         let elves: Vec<&str> = line.split(',').collect();
-        let elf_1 = elf_to_range(elves[0]);
-        let elf_2 = elf_to_range(elves[1]);
+        let elf_1 = Range::from_elf(elves[0]);
+        let elf_2 = Range::from_elf(elves[1]);
         if elf_1.overlaps(elf_2) {
             answer += 1
         }
