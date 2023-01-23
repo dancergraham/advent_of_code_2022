@@ -49,19 +49,19 @@ fn my_turn(code: char) -> Turn {
     };
     if code == 'X' {
         result = Turn {
-            choice: Item::Rock,
+            choice: Rock,
             score: 1,
         };
     } else if code == 'Y' {
         result = Turn {
-            choice: Item::Paper,
+            choice: Paper,
             score: 2,
         };
     }
     result
 }
 
-fn my_turn_2(code: char, opponent: Turn) -> Turn {
+fn my_turn_2(code: char, opponent: &Turn) -> Turn {
     let mut choice = Turn {
         choice: Scissors,
         score: 3,
@@ -79,7 +79,7 @@ fn my_turn_2(code: char, opponent: Turn) -> Turn {
             };
         } else if opponent.choice == Paper {
             choice = Turn {
-                choice: Item::Rock,
+                choice: Rock,
                 score: 1,
             };
         }
@@ -165,7 +165,7 @@ fn part_2(input: &str) -> i32 {
     for line in lines {
         let opponent = opponent_turn(line.chars().next().unwrap());
         let required_result = line.chars().nth(2).unwrap();
-        let me = my_turn_2(required_result, opponent.clone());
+        let me = my_turn_2(required_result, &opponent);
         answer = answer + me.score + outcome(me.choice, opponent.choice)
     }
     answer
