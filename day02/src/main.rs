@@ -99,28 +99,25 @@ fn my_turn_2(code: char, opponent: &Turn) -> Turn {
 }
 
 fn outcome(my_choice: Item, opponent_choice: Item) -> i32 {
-    let mut score = 0;
+    let score;
     if my_choice == opponent_choice {
         score = 3;
     } else if my_choice == Rock {
         if opponent_choice == Paper {
             score = 0
-        }
-        if opponent_choice == Scissors {
+        } else {
             score = 6
         }
     } else if my_choice == Paper {
         if opponent_choice == Rock {
             score = 6
-        }
-        if opponent_choice == Scissors {
+        } else {
             score = 0
         }
-    } else if my_choice == Scissors {
+    } else {
         if opponent_choice == Rock {
             score = 0
-        }
-        if opponent_choice == Paper {
+        } else {
             score = 6
         }
     }
