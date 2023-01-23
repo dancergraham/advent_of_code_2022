@@ -43,22 +43,20 @@ enum Item {
 }
 
 fn my_turn(code: char) -> Turn {
-    let mut result = Turn {
-        choice: Scissors,
-        score: 3,
-    };
-    if code == 'X' {
-        result = Turn {
+    match code {
+        'X' => Turn {
             choice: Rock,
             score: 1,
-        };
-    } else if code == 'Y' {
-        result = Turn {
+        },
+        'Y' => Turn {
             choice: Paper,
             score: 2,
-        };
+        },
+        _ => Turn {
+            choice: Scissors,
+            score: 3,
+        },
     }
-    result
 }
 
 fn my_turn_2(code: char, opponent: &Turn) -> Turn {
@@ -130,22 +128,20 @@ fn outcome(my_choice: Item, opponent_choice: Item) -> i32 {
 }
 
 fn opponent_turn(code: char) -> Turn {
-    let mut result = Turn {
-        choice: Scissors,
-        score: 3,
-    };
-    if code == 'A' {
-        result = Turn {
+    match code {
+        'A' => Turn {
             choice: Rock,
             score: 1,
-        };
-    } else if code == 'B' {
-        result = Turn {
+        },
+        'B' => Turn {
             choice: Paper,
             score: 2,
-        };
+        },
+        _ => Turn {
+            choice: Scissors,
+            score: 3,
+        },
     }
-    result
 }
 
 fn part_1(input: &str) -> i32 {
