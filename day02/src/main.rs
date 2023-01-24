@@ -35,6 +35,12 @@ struct Turn {
     choice: Item,
     score: i32,
 }
+impl Turn {
+    fn new(choice: Item, score: i32) -> Self {
+        Self { choice, score }
+    }
+}
+
 #[derive(PartialEq, Clone, Debug)]
 enum Item {
     Rock,
@@ -44,18 +50,9 @@ enum Item {
 
 fn my_turn(code: char) -> Turn {
     match code {
-        'X' => Turn {
-            choice: Rock,
-            score: 1,
-        },
-        'Y' => Turn {
-            choice: Paper,
-            score: 2,
-        },
-        _ => Turn {
-            choice: Scissors,
-            score: 3,
-        },
+        'X' => Turn::new(Rock, 1),
+        'Y' => Turn::new(Paper, 2),
+        _ => Turn::new(Scissors, 3),
     }
 }
 
@@ -126,18 +123,9 @@ fn outcome(my_choice: Item, opponent_choice: Item) -> i32 {
 
 fn opponent_turn(code: char) -> Turn {
     match code {
-        'A' => Turn {
-            choice: Rock,
-            score: 1,
-        },
-        'B' => Turn {
-            choice: Paper,
-            score: 2,
-        },
-        _ => Turn {
-            choice: Scissors,
-            score: 3,
-        },
+        'A' => Turn::new(Rock, 1),
+        'B' => Turn::new(Paper, 2),
+        _ => Turn::new(Scissors, 3),
     }
 }
 
