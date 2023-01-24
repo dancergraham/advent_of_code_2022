@@ -35,6 +35,12 @@ struct Turn {
     choice: Item,
     score: i32,
 }
+impl Turn {
+    fn new(choice: Item, score: i32) -> Self {
+        Self { choice, score }
+    }
+}
+
 #[derive(PartialEq, Clone, Debug)]
 enum Item {
     Rock,
@@ -44,18 +50,9 @@ enum Item {
 
 fn my_turn(code: char) -> Turn {
     match code {
-        'X' => Turn {
-            choice: Rock,
-            score: 1,
-        },
-        'Y' => Turn {
-            choice: Paper,
-            score: 2,
-        },
-        _ => Turn {
-            choice: Scissors,
-            score: 3,
-        },
+        'X' => Turn::new(Rock, 1),
+        'Y' => Turn::new(Paper, 2),
+        _ => Turn::new(Scissors, 3),
     }
 }
 
@@ -126,18 +123,9 @@ fn outcome(my_choice: Item, opponent_choice: Item) -> i32 {
 
 fn opponent_turn(code: char) -> Turn {
     match code {
-        'A' => Turn {
-            choice: Rock,
-            score: 1,
-        },
-        'B' => Turn {
-            choice: Paper,
-            score: 2,
-        },
-        _ => Turn {
-            choice: Scissors,
-            score: 3,
-        },
+        'A' => Turn::new(Rock, 1),
+        'B' => Turn::new(Paper, 2),
+        _ => Turn::new(Scissors, 3),
     }
 }
 
@@ -147,7 +135,7 @@ fn part_1(input: &str) -> i32 {
     for line in lines {
         let opponent = opponent_turn(line.chars().next().unwrap());
         let me = my_turn(line.chars().nth(2).unwrap());
-        answer = answer + me.score + outcome(me.choice, opponent.choice)
+        answer += me.score + outcome(me.choice, opponent.choice)
     }
     answer
 }
@@ -159,7 +147,7 @@ fn part_2(input: &str) -> i32 {
         let opponent = opponent_turn(line.chars().next().unwrap());
         let required_result = line.chars().nth(2).unwrap();
         let me = my_turn_2(required_result, &opponent);
-        answer = answer + me.score + outcome(me.choice, opponent.choice)
+        answer += me.score + outcome(me.choice, opponent.choice)
     }
     answer
 }
