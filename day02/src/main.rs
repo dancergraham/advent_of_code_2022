@@ -35,6 +35,12 @@ struct Turn {
     choice: Item,
     score: i32,
 }
+impl Turn {
+    fn new(choice: Item, score: i32) -> Self {
+        Self { choice, score }
+    }
+}
+
 #[derive(PartialEq, Clone, Debug)]
 enum Item {
     Rock,
@@ -43,25 +49,14 @@ enum Item {
 }
 
 fn my_turn(code: char) -> Turn {
-    let mut result = Turn {
-        choice: Scissors,
-        score: 3,
-    };
-    if code == 'X' {
-        result = Turn {
-            choice: Item::Rock,
-            score: 1,
-        };
-    } else if code == 'Y' {
-        result = Turn {
-            choice: Item::Paper,
-            score: 2,
-        };
+    match code {
+        'X' => Turn::new(Rock, 1),
+        'Y' => Turn::new(Paper, 2),
+        _ => Turn::new(Scissors, 3),
     }
-    result
 }
 
-fn my_turn_2(code: char, opponent: Turn) -> Turn {
+fn my_turn_2(code: char, opponent: &Turn) -> Turn {
     let mut choice = Turn {
         choice: Scissors,
         score: 3,
@@ -79,7 +74,7 @@ fn my_turn_2(code: char, opponent: Turn) -> Turn {
             };
         } else if opponent.choice == Paper {
             choice = Turn {
-                choice: Item::Rock,
+                choice: Rock,
                 score: 1,
             };
         }
@@ -101,28 +96,25 @@ fn my_turn_2(code: char, opponent: Turn) -> Turn {
 }
 
 fn outcome(my_choice: Item, opponent_choice: Item) -> i32 {
-    let mut score = 0;
+    let score;
     if my_choice == opponent_choice {
         score = 3;
     } else if my_choice == Rock {
         if opponent_choice == Paper {
             score = 0
-        }
-        if opponent_choice == Scissors {
+        } else {
             score = 6
         }
     } else if my_choice == Paper {
         if opponent_choice == Rock {
             score = 6
-        }
-        if opponent_choice == Scissors {
+        } else {
             score = 0
         }
-    } else if my_choice == Scissors {
+    } else {
         if opponent_choice == Rock {
             score = 0
-        }
-        if opponent_choice == Paper {
+        } else {
             score = 6
         }
     }
@@ -130,22 +122,11 @@ fn outcome(my_choice: Item, opponent_choice: Item) -> i32 {
 }
 
 fn opponent_turn(code: char) -> Turn {
-    let mut result = Turn {
-        choice: Scissors,
-        score: 3,
-    };
-    if code == 'A' {
-        result = Turn {
-            choice: Rock,
-            score: 1,
-        };
-    } else if code == 'B' {
-        result = Turn {
-            choice: Paper,
-            score: 2,
-        };
+    match code {
+        'A' => Turn::new(Rock, 1),
+        'B' => Turn::new(Paper, 2),
+        _ => Turn::new(Scissors, 3),
     }
-    result
 }
 
 fn part_1(input: &str) -> i32 {
@@ -154,7 +135,7 @@ fn part_1(input: &str) -> i32 {
     for line in lines {
         let opponent = opponent_turn(line.chars().next().unwrap());
         let me = my_turn(line.chars().nth(2).unwrap());
-        answer = answer + me.score + outcome(me.choice, opponent.choice)
+        answer += me.score + outcome(me.choice, opponent.choice)
     }
     answer
 }
@@ -165,8 +146,8 @@ fn part_2(input: &str) -> i32 {
     for line in lines {
         let opponent = opponent_turn(line.chars().next().unwrap());
         let required_result = line.chars().nth(2).unwrap();
-        let me = my_turn_2(required_result, opponent.clone());
-        answer = answer + me.score + outcome(me.choice, opponent.choice)
+        let me = my_turn_2(required_result, &opponent);
+        answer += me.score + outcome(me.choice, opponent.choice)
     }
     answer
 }

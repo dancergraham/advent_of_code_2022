@@ -30,7 +30,7 @@ fn main() {
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
-    let mut file = match File::open(&path) {
+    let mut file = match File::open(path) {
         Err(why) => panic!("couldn't open {}: {}", display, why),
         Ok(file) => file,
     };
@@ -55,17 +55,17 @@ fn part_1(input: &str) -> String {
         .parse::<usize>()
         .unwrap();
     let mut stacks: Vec<Vec<char>> = vec![vec![]; n_stacks];
-    for line in stackstrings.split("\n") {
+    for line in stackstrings.lines() {
         let mut chars = line.chars();
         chars.next();
         let char = chars.next().expect("at least one stack");
         if char != ' ' {
             stacks[0].push(char);
         }
-        for i in 1..n_stacks {
+        for stack in stacks.iter_mut().skip(1) {
             let char = chars.nth(3).unwrap();
             if char != ' ' {
-                stacks[i].push(char);
+                stack.push(char);
             }
         }
     }
@@ -80,12 +80,12 @@ fn part_1(input: &str) -> String {
             stacks[stack_to].push(item);
         }
     }
-    let mut answer_vec = vec![];
-    for i in 0..n_stacks {
-        answer_vec.push(stacks[i].pop().expect("at least one item on each stack"))
+    let mut answer_vec = Vec::new();
+    for stack in stacks.iter_mut() {
+        answer_vec.push(stack.pop().expect("at least one item on each stack"))
     }
     let answer: String = answer_vec.iter().collect();
-    return answer;
+    answer
 }
 
 fn part_2(input: &str) -> String {
@@ -106,27 +106,41 @@ fn part_2(input: &str) -> String {
         if char != ' ' {
             stacks[0].push(char);
         }
-        for i in 1..n_stacks {
+        for stack in stacks.iter_mut().skip(1) {
             let char = chars.nth(3).unwrap();
             if char != ' ' {
-                stacks[i].push(char);
+                stack.push(char);
             }
         }
     }
     let instructions = sections.next().expect("");
     for line in instructions.lines() {
-        let items: Vec<&str> = line.split(' ').collect();
-        let n_items = items[1].parse::<usize>().unwrap();
-        let stack_from = items[3].parse::<usize>().unwrap() - 1;
-        let stack_to = items[5].parse::<usize>().unwrap() - 1;
+        let mut items = line.split(' ').skip(1).step_by(2);
+        let n_items = items
+            .next()
+            .expect("it will be fine")
+            .parse::<usize>()
+            .unwrap();
+        let stack_from = items
+            .next()
+            .expect("it will be fine")
+            .parse::<usize>()
+            .unwrap()
+            - 1;
+        let stack_to = items
+            .next()
+            .expect("it will be fine")
+            .parse::<usize>()
+            .unwrap()
+            - 1;
         let split_point = stacks[stack_from].len() - n_items;
         let mut split_items = stacks[stack_from].split_off(split_point);
         stacks[stack_to].append(split_items.as_mut());
     }
-    let mut answer_vec = vec![];
-    for i in 0..n_stacks {
-        answer_vec.push(stacks[i].pop().expect("at least one item on each stack"))
+    let mut answer_vec = Vec::new();
+    for stack in stacks.iter_mut() {
+        answer_vec.push(stack.pop().expect("at least one item on each stack"))
     }
     let answer: String = answer_vec.iter().collect();
-    return answer;
+    answer
 }
