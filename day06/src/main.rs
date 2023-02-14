@@ -65,17 +65,17 @@ fn main() {
         }
     }
 }
-struct File_obj<'a> {
+struct FileObject<'a> {
     name: &'a str,
     size: usize,
-    contents: Vec<File_obj<'a>>,
+    contents: Vec<FileObject<'a>>,
     is_dir: bool,
 }
 
 fn part_1(input: &str) -> u32 {
-    use slab_tree::*;
+    // use slab_tree::*;
     let mut answer = 0;
-    let mut cd = File_obj {
+    let mut cd = FileObject {
         name: &"/",
         size: 0,
         contents: Vec::new(),
@@ -100,14 +100,14 @@ fn part_1(input: &str) -> u32 {
         } else {
             let values: Vec<&str> = line.split(' ').collect();
             if values[0].parse::<usize>().is_ok() {
-                cd.contents.push(File_obj {
+                cd.contents.push(FileObject {
                     name: values[1],
                     size: values[0].parse::<usize>().expect("OK"),
                     contents: vec![],
                     is_dir: false,
                 })
             } else {
-                cd.contents.push(File_obj {
+                cd.contents.push(FileObject {
                     name: values[1],
                     size: 0,
                     contents: vec![],
