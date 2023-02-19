@@ -10,10 +10,10 @@ mod tests {
 2-6,4-8";
         use super::*;
         let answer = part_1(test_input);
-        println!("The test answer to Part 1 is {}", answer);
+        println!("The test answer to Part 1 is {answer}");
         assert_eq!(answer, 2);
         let answer = part_2(test_input);
-        println!("The test answer to Part 2 is {}", answer);
+        println!("The test answer to Part 2 is {answer}");
         assert_eq!(answer, 4);
     }
 }
@@ -27,7 +27,7 @@ fn main() {
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
-    let mut file = match File::open(&path) {
+    let mut file = match File::open(path) {
         Err(why) => panic!("couldn't open {}: {}", display, why),
         Ok(file) => file,
     };
@@ -47,22 +47,24 @@ struct Range {
     end: u32,
 }
 
-fn elf_to_range(elf: &str) -> Range {
-    let values: Vec<&str> = elf.split('-').collect();
-    return Range {
-        start: values[0].parse::<u32>().unwrap(),
-        end: values[1].parse::<u32>().unwrap(),
-    };
-}
+impl Range {
+    // range 2 is entirely contained in range 1
+    fn contains(self, other: Range) -> bool {
+        (other.start >= self.start) & (other.end <= self.end)
+    }
 
-// range 2 is entirely contained in range 1
-fn contains(range_1: Range, range_2: Range) -> bool {
-    return (range_2.start >= range_1.start) & (range_2.end <= range_1.end);
-}
+    // range 2 is partially or fully contained in range 1
+    fn overlaps(self, other: Range) -> bool {
+        !((other.end < self.start) | (other.start > self.end))
+    }
 
-// range 2 is partially or fully contained in range 1
-fn overlaps(range_1: Range, range_2: Range) -> bool {
-    return !((range_2.end < range_1.start) | (range_2.start > range_1.end));
+    fn from_elf(elf: &str) -> Self {
+        let values: Vec<&str> = elf.split('-').collect();
+        Self {
+            start: values[0].parse::<u32>().unwrap(),
+            end: values[1].parse::<u32>().unwrap(),
+        }
+    }
 }
 
 fn part_1(input: &str) -> i32 {
@@ -70,13 +72,13 @@ fn part_1(input: &str) -> i32 {
     let lines = input.lines();
     for line in lines {
         let elves: Vec<&str> = line.split(',').collect();
-        let elf_1 = elf_to_range(elves[0]);
-        let elf_2 = elf_to_range(elves[1]);
-        if contains(elf_1, elf_2) | contains(elf_2, elf_1) {
-            answer = answer + 1
+        let elf_1 = Range::from_elf(elves[0]);
+        let elf_2 = Range::from_elf(elves[1]);
+        if elf_1.contains(elf_2) | elf_2.contains(elf_1) {
+            answer += 1
         }
     }
-    return answer;
+    answer
 }
 
 fn part_2(input: &str) -> i32 {
@@ -84,11 +86,11 @@ fn part_2(input: &str) -> i32 {
     let lines = input.lines();
     for line in lines {
         let elves: Vec<&str> = line.split(',').collect();
-        let elf_1 = elf_to_range(elves[0]);
-        let elf_2 = elf_to_range(elves[1]);
-        if overlaps(elf_1, elf_2) {
-            answer = answer + 1
+        let elf_1 = Range::from_elf(elves[0]);
+        let elf_2 = Range::from_elf(elves[1]);
+        if elf_1.overlaps(elf_2) {
+            answer += 1
         }
     }
-    return answer;
+    answer
 }
