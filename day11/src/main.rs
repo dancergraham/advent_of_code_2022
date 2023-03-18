@@ -35,18 +35,27 @@ Monkey 3:
         println!("The test answer to Part 1 is {}", answer);
         assert_eq!(answer, 10605);
     }
+
+    #[test]
+    fn test_part_2() {
+        use super::*;
+        let answer = part_2(TEST_INPUT);
+        println!("The test answer to Part 2 is {}", answer);
+        assert_eq!(answer, 2713310158);
+    }
 }
 
 struct Monkey {
-    items: Vec<i32>,
+    items: Vec<u128>,
     operation: String,
-    amount: i32,
-    test_divisible: i32,
-    true_monkey: i32,
-    false_monkey: i32,
+    worry_level: u128,
+    operations: u128,
+    test_divisible: u128,
+    true_monkey: u128,
+    false_monkey: u128,
 }
-fn parse(s: &str) -> i32 {
-    s.parse::<i32>().unwrap()
+fn parse(s: &str) -> u128 {
+    s.parse::<u128>().unwrap()
 }
 fn parse_monkey(text: &str) -> Monkey {
     let mut lines = text.lines();
@@ -68,11 +77,11 @@ fn parse_monkey(text: &str) -> Monkey {
         .collect();
     let mut operation = operations[0].parse().unwrap();
     let operation_complement = operations[1];
-    let mut amount = 0;
+    let mut amount: u128 = 0;
     if operation_complement == "old" {
         operation = String::from("**");
     } else {
-        amount = parse(operations[1]);
+        amount = parse(operations[1]) as u128;
     }
     let test_divisible = parse(
         lines
@@ -98,7 +107,8 @@ fn parse_monkey(text: &str) -> Monkey {
     return Monkey {
         items,
         operation,
-        amount,
+        worry_level: amount,
+        operations: 0,
         test_divisible,
         true_monkey,
         false_monkey,
@@ -123,38 +133,100 @@ fn main() {
         Err(why) => panic!("couldn't read {}: {}", display, why),
         Ok(_) => {
             println!("The answer to Part 1 is {}", part_1(&s));
-            // println!("The answer to Part 2 is {}", part_2(&s));
+            println!("The answer to Part 2 is {}", part_2(&s));
         }
     }
 }
 
-fn operate(item: &i32, op: &String, amount: i32) -> i32 {
+fn operate(item: &u128, op: &String, amount: u128, max_worry_level: u128) -> u128 {
     return if op == "**" {
-        item * item
+        item * item % max_worry_level
     } else if op == "*" {
-        item * amount
+        item * amount % max_worry_level
     } else {
-        item + amount
+        item + amount % max_worry_level
     };
 }
 
-fn part_1(input: &str) -> i32 {
+fn part_1(input: &str) -> u128 {
     let mut monkeys: Vec<Monkey> = input.split("\n\n").map(parse_monkey).collect();
     for _turn in 0..20 {
-        for m_i in 0..monkeys.len() {
-            let mut monkey = &monkeys[m_i];
+        for i in 0..monkeys.len() {
+            let monkey = &mut monkeys[i];
+            let true_monkey = monkey.true_monkey.clone() as usize;
+            let false_monkey = monkey.false_monkey.clone() as usize;
+            let mut true_items = Vec::new();
+            let mut false_items = Vec::new();
 
-            for mut item in &monkey.items {
-                let mut new_item = &operate(item, &monkey.operation, monkey.amount);
+            for item in &monkey.items {
+                monkey.operations += 1;
+                let new_item = &operate(item, &monkey.operation, monkey.worry_level, 10_000_000);
                 let new_item = &(new_item / 3);
-                if &(new_item % monkey.test_divisible) == &0 as &i32 {
-                    monkeys[monkey.true_monkey as usize].items.push(*new_item)
+                if &(new_item % monkey.test_divisible) == &u128::from(0) {
+                    true_items.push(*new_item)
                 } else {
-                    monkeys[monkey.false_monkey as usize].items.push(*new_item)
+                    false_items.push(*new_item)
                 }
             }
             monkey.items.clear();
+            let monkey = &mut monkeys[true_monkey];
+            monkey.items.append(&mut true_items);
+            let monkey = &mut monkeys[false_monkey];
+            monkey.items.append(&mut false_items);
         }
     }
-    return 0;
+    let mut most_active = 0;
+    let mut next_most = 0;
+    for monkey in monkeys {
+        if monkey.operations > next_most {
+            next_most = monkey.operations;
+            if next_most > most_active {
+                (most_active, next_most) = (next_most, most_active)
+            }
+        }
+    }
+    return most_active * next_most;
+}
+
+fn part_2(input: &str) -> u128 {
+    let mut monkeys: Vec<Monkey> = input.split("\n\n").map(parse_monkey).collect();
+    let mut maximum_worry = 1;
+    for monkey in &monkeys {
+        maximum_worry *= monkey.test_divisible;
+    }
+    for _turn in 0..5 {
+        for i in 0..monkeys.len() {
+            let monkey = &mut monkeys[i];
+            let true_monkey = monkey.true_monkey.clone() as usize;
+            let false_monkey = monkey.false_monkey.clone() as usize;
+            let mut true_items = Vec::new();
+            let mut false_items = Vec::new();
+
+            for item in &monkey.items {
+                monkey.operations += 1;
+                let new_item = &operate(item, &monkey.operation, monkey.worry_level, maximum_worry);
+                if &(new_item % monkey.test_divisible) == &0 as &u128 {
+                    true_items.push(*new_item)
+                } else {
+                    false_items.push(*new_item)
+                }
+            }
+            monkey.items.clear();
+            let monkey = &mut monkeys[true_monkey];
+            monkey.items.append(&mut true_items);
+            let monkey = &mut monkeys[false_monkey];
+            monkey.items.append(&mut false_items);
+        }
+    }
+    let mut most_active = 0;
+    let mut next_most = 0;
+    for monkey in monkeys {
+        if monkey.operations > next_most {
+            next_most = monkey.operations;
+            if next_most > most_active {
+                (most_active, next_most) = (next_most, most_active)
+            }
+        }
+    }
+    return most_active * next_most;
 }
